@@ -81,7 +81,11 @@ module Mail
     end
 
     def do_decode
-      Utilities.blank?(value) ? nil : Encodings.decode_encode(value, :decode)
+      if charset.to_s.downcase == 'iso-2022-jp'
+        value
+      else
+        Utilities.blank?(value) ? nil : Encodings.decode_encode(value, :decode)
+      end
     end
 
     # 2.2.3. Long Header Fields

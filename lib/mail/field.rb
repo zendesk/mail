@@ -160,6 +160,7 @@ module Mail
     #  Mail::Field.new('content-type', ['text', 'plain', {:charset => 'UTF-8'}])
     #  # => #<Mail::Field …>
     def initialize(name, value = nil, charset = 'utf-8')
+      value = RubyVer.preprocess(charset, value)
       case
       when name.index(COLON)
         raise ArgumentError, 'Passing an unparsed header field to Mail::Field.new is not supported in Mail 2.8.0+. Use Mail::Field.parse instead.'

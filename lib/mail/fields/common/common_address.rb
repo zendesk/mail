@@ -6,6 +6,13 @@ module Mail
   module CommonAddress # :nodoc:
 
     def initialize(value = nil, charset = 'utf-8')
+      if charset.to_s.downcase == 'iso-2022-jp'
+        if value.kind_of?(Array)
+          value = value.map { |e| encode_with_iso_2022_jp(e) }
+        else
+          value = encode_with_iso_2022_jp(value)
+        end
+      end
       self.charset = charset
       super(self.class.const_get('CAPITALIZED_FIELD'), value, charset)
       self
@@ -151,6 +158,7 @@ module Mail
 
     def do_decode
       return nil if Utilities.blank?(value)
+      return value if charset.to_s.downcase == 'iso-2022-jp'
       address_array = address_list.addresses.reject { |a| decoded_group_addresses.include?(a.decoded) }.map { |a| a.decoded }
       address_text  = address_array.join(", ")
       group_array = groups.map { |k,v| "#{k}: #{v.map { |a| a.decoded }.join(", ")};" }
@@ -170,6 +178,14 @@ module Mail
         end
       else
         []
+      end
+    end
+
+    def encode_with_iso_2022_jp(string)
+      if md = string.match(/ <[\x00-\x7f]*>\z/)
+        RubyVer.encode_with_iso_2022_jp(md.pre_match) + md[0]
+      else
+        string
       end
     end
   end

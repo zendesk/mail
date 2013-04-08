@@ -36,6 +36,7 @@ module Mail # :doc:
   require 'mail/constants'
   require 'mail/utilities'
   require 'mail/configuration'
+  require 'mail/preprocessor'
 
   @@autoloads = {}
   def self.register_autoload(name, path)

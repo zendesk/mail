@@ -3,6 +3,8 @@
 
 module Mail
   class Ruby19
+    require 'base64'
+
     class StrictCharsetEncoder
       def encode(string, charset)
         case charset
@@ -273,6 +275,41 @@ module Mail
         decoded = str.encode(Encoding::UTF_8, :undef => :replace, :invalid => :replace, :replace => "�")
         decoded.valid_encoding? ? decoded : decoded.encode(Encoding::UTF_16LE, :invalid => :replace, :replace => "�").encode(Encoding::UTF_8)
       end
+    end
+
+    ENCODE = { 'iso-2022-jp' => Encoding::CP50221 }
+    def self.encoding_to_charset(str, charset)
+      str.encode(ENCODE[charset.to_s.downcase] || charset, :undef => :replace).force_encoding(charset)
+    end
+
+    def Ruby19.preprocess(charset, value)
+      if charset.to_s.downcase == 'iso-2022-jp'
+        if value.respond_to?(:encoding) && ![ 'UTF-8', 'US-ASCII' ].include?(value.encoding.to_s)
+          raise ::Mail::InvalidEncodingError.new(
+            "The '#{name}' field is not encoded in UTF-8 nor in US-ASCII but in #{value.encoding}")
+        end
+        if value.kind_of?(Array)
+          value.map { |e| Mail::Preprocessor.process(e) }
+        else
+          Mail::Preprocessor.process(value)
+        end
+      else
+        value
+      end
+    end
+
+    def Ruby19.preprocess_body_raw(charset, body_raw)
+      if charset.to_s.downcase == 'iso-2022-jp'
+        encoding_to_charset(body_raw, charset)
+      else
+        body_raw
+      end
+    end
+
+    def Ruby19.encode_with_iso_2022_jp(value)
+      value = Mail::Preprocessor.process(value)
+      value = encoding_to_charset(value, 'iso-2022-jp')
+      Encodings.b_value_encode(value, 'iso-2022-jp')
     end
   end
 end
