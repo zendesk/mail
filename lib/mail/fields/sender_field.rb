@@ -37,26 +37,12 @@ module Mail
     FIELD_NAME = 'sender'
     CAPITALIZED_FIELD = 'Sender'
 
-    def initialize(value = nil, charset = 'utf-8')
-      self.charset = charset
-      super(CAPITALIZED_FIELD, value, charset)
-      self
-    end
-
     def addresses
       [address.address]
     end
 
     def address
       address_list.addresses.first
-    end
-    
-    def encoded
-      do_encode(CAPITALIZED_FIELD)
-    end
-    
-    def decoded
-      do_decode
     end
     
     def default

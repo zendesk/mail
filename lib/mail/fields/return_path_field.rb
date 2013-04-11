@@ -40,17 +40,11 @@ module Mail
     
     def initialize(value = nil, charset = 'utf-8')
       value = nil if value == '<>'
-      self.charset = charset
-      super(CAPITALIZED_FIELD, value, charset)
-      self
+      super(value, charset)
     end
     
     def encoded
       "#{CAPITALIZED_FIELD}: <#{address}>\r\n"
-    end
-    
-    def decoded
-      do_decode
     end
     
     def address

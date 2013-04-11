@@ -37,12 +37,6 @@ module Mail
     FIELD_NAME = 'bcc'
     CAPITALIZED_FIELD = 'Bcc'
     
-    def initialize(value = nil, charset = 'utf-8')
-      @charset = charset
-      super(CAPITALIZED_FIELD, value, charset)
-      self
-    end
-    
     def include_in_headers=(include_in_headers)
       @include_in_headers = include_in_headers
     end
@@ -58,10 +52,6 @@ module Mail
       else
         ''
       end
-    end
-    
-    def decoded
-      do_decode
     end
     
   end

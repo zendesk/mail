@@ -4,6 +4,21 @@ require 'mail/fields/common/address_container'
 
 module Mail
   module CommonAddress # :nodoc:
+
+    def initialize(value = nil, charset = 'utf-8')
+      self.charset = charset
+      super(self.class.const_get('CAPITALIZED_FIELD'), value, charset)
+      self
+    end
+
+    def encoded
+      do_encode(self.class.const_get('CAPITALIZED_FIELD'))
+    end
+
+    def decoded
+      do_decode
+    end
+
     def parse(val = value)
       unless Utilities.blank?(val)
         @address_list = AddressList.new(encode_if_needed(val))
