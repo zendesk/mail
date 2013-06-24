@@ -81,11 +81,7 @@ module Mail
     end
 
     def do_decode
-      if charset.to_s.downcase == 'iso-2022-jp'
-        value
-      else
-        Utilities.blank?(value) ? nil : Encodings.decode_encode(value, :decode)
-      end
+      CharsetCodec.find(charset).decode_unstructured_field(value)
     end
 
     # 2.2.3. Long Header Fields
@@ -171,7 +167,7 @@ module Mail
           end
 
           word = encode(word) if should_encode
-          word = encode_crlf(word)
+          word = CharsetCodec.find(charset).encode_crlf(word)
           # Skip to next line if we're going to go past the limit
           # Unless this is the first word, in which case we're going to add it anyway
           # Note: This means that a word that's longer than 998 characters is going to break the spec. Please fix if this is a problem for you.
@@ -207,12 +203,6 @@ module Mail
       value.gsub!(/\?/, '=3F')
       value.gsub!(/_/,  '=5F')
       value.gsub!(/ /,  '_')
-      value
-    end
-
-    def encode_crlf(value)
-      value.gsub!(CR, CR_ENCODED)
-      value.gsub!(LF, LF_ENCODED)
       value
     end
 

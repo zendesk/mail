@@ -1242,7 +1242,7 @@ module Mail
     #  mail.parts.length #=> 2
     #  mail.parts.last.content_type.content_type #=> 'This is a body'
     def body=(value)
-      value = RubyVer.preprocess(@charset, value)
+      value = CharsetCodec.find(@charset).preprocess(value)
       body_lazy(value)
     end
 
@@ -1709,9 +1709,7 @@ module Mail
     # html_part are both defined in a message, then it will be a multipart/alternative
     # message and set itself that way.
     def text_part=(msg)
-      if @charset.to_s.downcase == 'iso-2022-jp' && msg && msg.charset.nil?
-        msg.charset = @charset
-      end
+      CharsetCodec.find(@charset).set_charset_on(msg)
 
       # Assign the text part and set multipart/alternative if there's an html part.
       if msg
@@ -2026,7 +2024,7 @@ module Mail
 
 
     def process_body_raw
-      @body_raw = RubyVer.preprocess_body_raw(@charset, @body_raw)
+      @body_raw = CharsetCodec.find(@charset).preprocess_body_raw(@body_raw)
       @body = Mail::Body.new(@body_raw)
       @body_raw = nil
       separate_parts if @separate_parts
