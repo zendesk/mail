@@ -5,12 +5,13 @@ require 'mail/version'
 Gem::Specification.new do |s|
   s.name        = "mail"
   s.version     = Mail::VERSION::STRING
-  s.author      = "Mikel Lindsaar"
-  s.email       = "raasdnil@gmail.com"
-  s.homepage    = "http://github.com/mikel/mail"
+  s.author      = "Zendesk"
+  s.email       = "dev@zendesk.com"
+  s.homepage    = "https://github.com/zendesk/mail"
   s.description = "A really Ruby Mail handler."
   s.summary     = "Mail provides a nice Ruby DSL for making, sending and reading emails."
   s.license     = "MIT"
+  s.metadata['allowed_push_host'] = "https://gem.zdsys.com/gems/"
 
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = true
@@ -23,6 +24,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rake', '> 0.8.7')
   s.add_development_dependency('rspec', '~> 2.12.0')
   s.add_development_dependency('rdoc')
+  s.add_development_dependency('private_gem')
 
   s.require_path = 'lib'
   s.files = %w(README.md VERSION MIT-LICENSE CONTRIBUTING.md CHANGELOG.rdoc Dependencies.txt Gemfile Rakefile TODO.rdoc) + Dir.glob("lib/**/*")
