@@ -188,6 +188,20 @@ describe "SMTP Delivery Method" do
         end
       end.to raise_error('An SMTP To address is required to send a message. Set the message smtp_envelope_to, to, cc, or bcc address.')
     end
+
+    it "uses multiple To addresses" do
+      Mail.deliver do
+        to "to@someemail.com, also@example.org"
+        from "from@someemail.com"
+        message_id "<1234@someemail.com>"
+        body "body"
+
+        smtp_envelope_to ["smtp_to@someemail.com", "also@example.org"]
+        smtp_envelope_from "smtp_from@someemail.com"
+      end
+      expect(MockSMTP.deliveries[0][1]).to eq 'smtp_from@someemail.com'
+      expect(MockSMTP.deliveries[0][2]).to eq %w(smtp_to@someemail.com also@example.org)
+    end
   end
 
 end
