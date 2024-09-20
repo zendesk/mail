@@ -103,7 +103,7 @@ describe "mail with iso-2022-jp encoding" do
           subject '日本語件名'
           body NKF.nkf("-Wj", '日本語本文')
         end
-      }.should raise_error(Mail::InvalidEncodingError)
+      }.to raise_error(Mail::InvalidEncodingError)
     end
   end
 
