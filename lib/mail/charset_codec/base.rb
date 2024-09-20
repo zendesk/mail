@@ -2,6 +2,7 @@ require 'mail/charset_codec'
 module Mail
   module CharsetCodec
     class Base
+      include Constants
 
       def remap_characters(value)
         value
