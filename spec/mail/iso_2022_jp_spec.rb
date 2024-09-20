@@ -96,7 +96,7 @@ describe "mail with iso-2022-jp encoding" do
     end
 
     it "should raise exeception if the encoding of mail body is not UTF-8" do
-      doing {
+      expect {
         Mail.new(:charset => 'ISO-2022-JP') do
           from [ '山田太郎 <taro@example.com>' ]
           to [ '佐藤花子 <hanako@example.com>' ]
